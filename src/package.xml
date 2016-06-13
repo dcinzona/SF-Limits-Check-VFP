@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>ApexLimitsCheckBatch</members>
+        <members>ApexLimitsCheckBatchScheduler</members>
+        <members>ApexLimitsChecker</members>
+        <members>ApexLimitsCheckerJob</members>
+        <members>ApexLimitsTest</members>
+        <members>Jwt</members>
+        <members>LimitsResult</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>LimitsCheckerPage</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>forcetk</members>
+        <members>sldsscoped</members>
+        <name>StaticResource</name>
+    </types>
+    <version>36.0</version>
+</Package>

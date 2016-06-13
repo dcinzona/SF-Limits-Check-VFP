@@ -1,0 +1,87 @@
+<apex:page >
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="{!$Resource.forcetk}"></script>
+    <style>
+        .percentBar{
+        position:absolute;
+        height:100%;
+        opacity:.1;
+        top: 0;
+        }
+    </style>
+    <apex:stylesheet value="{!URLFOR($Resource.sldsscoped, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
+    <div class="gmt">
+        <table id="limitsTable" class="slds-table slds-table--bordered slds-max-medium-table--stacked slds-no-row-hover">
+            <thead>
+                <tr class="slds-text-heading--label">
+                    <th scope="col" title="Limit Name" class="slds-theme--shade">
+                        Limit Name
+                    </th>
+                    <th scope="col" title="Max" class="slds-theme--shade">
+                        Max
+                    </th>
+                    <th scope="col" title="Remaining" class="slds-theme--shade">
+                        Remaining
+                    </th>
+                    <th scope="col" title="Percent Used" class="slds-theme--shade">
+                        Percent Used
+                    </th>
+                </tr>
+            </thead>
+            <tbody> 
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+    $(function(){
+        function percentageCalc(max, remaining){
+            var used = max - remaining;
+            var result = Math.round((used/max) * 100);
+            return result;
+        }
+        function percentColor(percent){
+            if(percent > 90)
+                return 'red';
+            
+            if(percent > 50)
+                return 'orange';
+            
+            return 'green';
+            
+        }
+        var client = new forcetk.Client();
+        client.setSessionToken('{!$Api.Session_ID}');
+        
+        var table = $('#limitsTable');
+        var tbody = table.find('tbody');
+        var tdClass="slds-cell-shrink slds-align-top";
+        
+        client.ajax("/v36.0/limits/", function(jsonResponse){
+            var limitsAsArray = [];
+            Object.keys(jsonResponse).forEach(
+                function(limit){
+                    var limitObj = { Name : limit 
+                                    , Max : jsonResponse[limit].Max
+                                    , Remaining : jsonResponse[limit].Remaining
+                                    , Percent : percentageCalc(jsonResponse[limit].Max,jsonResponse[limit].Remaining)
+                                   }
+                    limitsAsArray.push(limitObj);
+                    var nametd = '<td class="'+tdClass+'">'+limitObj.Name+'</td>';
+                    var maxtd = '<td class="'+tdClass+'">'+limitObj.Max+'</td>';
+                    var remainingtd = '<td class="'+tdClass+'">'+limitObj.Remaining+'</td>';
+                    var percentage = '<td class="'+tdClass+'">'+
+                        '<div class="percentBar" style="width:'+limitObj.Percent+'%;background-color:'+percentColor(limitObj.Percent)+'"></div>'+
+                        limitObj.Percent+'%</td>';
+                    tbody.append('<tr>'+
+                                 nametd +
+                                 maxtd +
+                                 remainingtd +
+                                 percentage +
+                                 '</tr>');
+                });
+        });
+    });
+    
+    </script>    
+</apex:page>

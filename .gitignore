@@ -1,0 +1,18 @@
+.project
+.settings
+.metadata
+salesforce.schema
+Referenced Packages
+*.sublime-project
+*.sublime-settings
+*.sublime-workspace
+apex-scripts/log
+build.properties
+config
+mm.log
+npm-debug.log
+deploy
+debug
+.DS_Store
+*.properties
+.vim-force.com
