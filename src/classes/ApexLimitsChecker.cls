@@ -4,6 +4,7 @@ public with sharing class ApexLimitsChecker {
     private static final String CLIENT_ID = '<CONNECTED APP OAUTH CLIENT ID>';
     private static final string ORG_HOSTNAME = '<ORG HOSTNAME TO QUERY>';
 
+//Aura Enabled so that this class can be used in a lightning component if desired
     @AuraEnabled
     public static string getJWTAccessToken(){
         Jwt.Configuration config = new Jwt.Configuration();
@@ -17,6 +18,7 @@ public with sharing class ApexLimitsChecker {
         return accessToken;
     }
 
+//Aura Enabled so that this class can be used in a lightning component if desired
     @AuraEnabled
     public static String GetLimitsJson(string hostName, string accessToken){
 
@@ -37,9 +39,10 @@ public with sharing class ApexLimitsChecker {
         return res1.getBody();
     }
 
+//Used in the batch job
     public static List<Limit__c> GetLimitsListFromApi(){
         DateTime recordDate = DateTime.now();
-        String limits = ApexLimitsChecker.GetLimitsJson('gmt-acumen-demo-org.my.salesforce.com',null);
+        String limits = ApexLimitsChecker.GetLimitsJson(ORG_HOSTNAME,null);
         JSONParser parser = JSON.createParser(limits);
         List<Limit__c> records = new List<Limit__c>();
         String currentObjectName = null;
