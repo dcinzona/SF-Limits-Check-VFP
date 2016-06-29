@@ -8,6 +8,9 @@
         opacity:.1;
         top: 0;
         }
+        .gmt{
+        	padding:1em;
+        }
     </style>
     <apex:stylesheet value="{!URLFOR($Resource.sldsscoped, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
     <div class="gmt">
@@ -32,7 +35,8 @@
             </tbody>
         </table>
     </div>
-    
+    <!-- InitFromComponent is false because we initialize the table after the data is loaded via AJAX -->
+    <c:DataTableBuilder tableId="limitsTable" initFromComponent="false" enableSearch="true"></c:DataTableBuilder>
     <script>
     $(function(){
         function percentageCalc(max, remaining){
@@ -80,6 +84,8 @@
                                  percentage +
                                  '</tr>');
                 });
+            
+        	dataTable_limitsTable.init('limitsTable');
         });
     });
     

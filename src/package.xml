@@ -6,19 +6,28 @@
         <members>ApexLimitsChecker</members>
         <members>ApexLimitsCheckerJob</members>
         <members>ApexLimitsTest</members>
+        <members>DataTableBuilderController</members>
+        <members>DataTableService</members>
         <members>Jwt</members>
         <members>LimitsResult</members>
         <name>ApexClass</name>
     </types>
     <types>
+        <members>DataTableBuilder</members>
+        <name>ApexComponent</name>
+    </types>
+    <types>
+        <members>DataTableVFPOC</members>
         <members>LimitsCheckerPage</members>
         <name>ApexPage</name>
     </types>
     <types>
+        <members>DataTableSettings__c</members>
         <members>Limit__c</members>
         <name>CustomObject</name>
     </types>
     <types>
+        <members>DataTables</members>
         <members>forcetk</members>
         <members>sldsscoped</members>
         <name>StaticResource</name>

@@ -1,0 +1,89 @@
+<apex:component controller="DataTableBuilderController">
+    
+    <apex:includeScript value="/soap/ajax/37.0/connection.js"/>
+    <apex:includeScript value="/soap/ajax/37.0/apex.js"/>
+    <apex:attribute name="tableId" 
+                    description="The ID of the table to initialize"
+                    type="String" 
+                    required="true" assignTo="{!dataTableId}"/>
+    <apex:attribute name="initFromComponent" 
+                    description="Disable Initializing the table from this component"
+                    type="Boolean" 
+                    required="false" 
+                    default="true"/>
+    <apex:attribute name="enableSearch" 
+                    description="Enable DataTables Search Field"
+                    type="Boolean" 
+                    required="false" 
+                    default="false"/>
+    <apex:stylesheet value="{!URLFOR($Resource.DataTables, 'datatables.css')}" />
+    <script src="{!URLFOR($Resource.DataTables, 'datatables.js')}"></script>
+    
+    <script>
+        
+        var dataTable_{!dataTableId} = dataTable_{!dataTableId} || {
+            saveTableSettings : function(uniqueTableId,data){
+                sforce.connection.sessionId = '{!$Api.Session_ID}';
+                var response = sforce.apex.execute("DataTableBuilderController","saveSettings",
+                                                   {
+                                                       uniqueTableId:uniqueTableId,
+                                                       settings:data
+                                                   });
+                console.log('DataTable Opts Saved for: ' + uniqueTableId);
+                var settings = response[0];
+                console.log(JSON.parse(settings));
+            },
+            getTableSettingsName : function(){
+                return 'DataTables_{!UniqueTableId}';
+            },
+            init : function(htmlTableId){
+                var uniqueId = this.getTableSettingsName();
+                var settingsFromDB = '{!DataTableSettings}';
+                if(settingsFromDB.trim() == ''){
+                    console.log('settingsFromDb was empty');
+                    localStorage.setItem( uniqueId, null );
+                }else{
+                    console.log('setting local storage for: ' + uniqueId);
+                    console.log(settingsFromDB);
+                    localStorage.setItem( uniqueId, settingsFromDB );
+                }
+                var opts = {
+                    searching: {!enableSearch},
+                    paging: false,
+                    dom: 'Bfrtip',
+                    stateSave: true,
+                    stateSaveCallback: function(settings,data) {
+                        //console.log('stateSaveCallback');
+                        //saveTableSettings('DataTables_' + settings.sInstance,JSON.stringify(data));
+                        localStorage.setItem( uniqueId, JSON.stringify(data) )
+                    },
+                    stateLoadCallback: function(settings) {
+                        //console.log('stateLoadCallback');
+                        //console.log('{!DataTableSettings}');
+                        return JSON.parse( localStorage.getItem( uniqueId ) )
+                    },
+                    buttons: [
+                        'colvis'
+                    ]};
+                var theTable = $('#' + htmlTableId);
+                if(theTable.length == 0){
+                    theTable = $('table[id$=":'+htmlTableId+'"]');
+                }
+                theTable.DataTable(opts);
+                theTable.before('<a id="SaveSettings_'+htmlTableId+'" class="dt-button">Save View</a>');
+                theTable.css('margin-top','5px');
+                $('#SaveSettings_'+htmlTableId).on('click',function(){
+                    var data = JSON.parse( localStorage.getItem( uniqueId ) );
+                    //console.log(data);
+                    dataTable_{!dataTableId}.saveTableSettings(uniqueId, JSON.stringify(data));
+                });
+            }
+        }
+        
+        $(function(){
+            if({!initFromComponent}){
+                dataTable_{!dataTableId}.init('{!dataTableId}');
+            }
+        });
+    </script>
+</apex:component>
