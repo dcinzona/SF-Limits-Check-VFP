@@ -6,6 +6,8 @@ The VisualForce page only requires that the static resources be added to the org
 
 *Please note, the user must have the correct permissions in order to view the limits.*
 
+![VisualForce page screenshot](https://raw.githubusercontent.com/dcinzona/SF-Limits-Check-VFP/master/VisualForcePage-Screenshot.png)
+
 ## Batch Setup
 In order to get the batch process working correctly, there are several steps that must be taken.
 
